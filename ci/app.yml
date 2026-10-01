@@ -1,0 +1,36 @@
+app_key: frugal_coordinator
+display_name: "frugal-coordinator"
+repo: https://github.com/simplificando-roberto/frugal-coordinator.git
+repo_owner: simplificando-roberto
+default_branch: master
+
+# Repo de skill en markdown (SKILL.md + assets/ + references/). Sin codigo de
+# aplicacion: el unico Python es la suite de contrato stdlib en tests/. Sin
+# despliegue gestionado por Jenkins: es un paquete copiable, no un servicio;
+# deploy.type=none deja el job en modo solo-CI (mismo contrato que
+# fleet-board/entradas/game).
+stack:
+  type: [python]
+
+paths:
+  root: .
+
+commands:
+  install: false
+  lint:
+    # compileall falla con exit!=0 ante cualquier error de sintaxis de la suite.
+    - python3 -m compileall -q tests
+  typecheck: false
+  test:
+    # Contrato real del paquete: frontmatter de SKILL.md, ficheros requeridos
+    # y enlaces relativos resolubles. Falla si el paquete queda roto.
+    - python3 -m unittest discover -s tests -v
+  build: false
+  e2e: false
+
+deploy:
+  type: none
+
+health:
+  staging: []
+  production: []
